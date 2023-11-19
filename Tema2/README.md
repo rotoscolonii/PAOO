@@ -1,4 +1,4 @@
-cd ./build
-cmake ..
-make
-./Tema2
+cd ./build  
+cmake ..  
+make  
+./Tema2  
