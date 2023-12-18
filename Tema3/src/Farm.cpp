@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Farm.hpp"
 #include <stdlib.h> 
+#include <thread>
+#include <unistd.h>
 #include <mutex>
 
 using namespace std;
@@ -16,14 +18,14 @@ namespace farm{
     }
 
     void Cow::Eat(){
-        int n = rand() % 10;
+        int n = rand() % 10 +1;
         int flag = 0;
-        cowMutex.lock();
+        sleep(3);
+        lock_guard<mutex> lck(cowMutex);
         if(farm::cowFood < n)
             flag=1;
         else
             farm::cowFood -= n;
-        cowMutex.unlock();
 
         if(flag)
             std::terminate();
@@ -42,14 +44,14 @@ namespace farm{
     }
 
     void Chicken::Eat(){
-        int n = rand() % 10;
+        int n = rand() % 10 +1;
         int flag = 0;
-        chickenMutex.lock();
+        sleep(3);
+        lock_guard<mutex> lck(chickenMutex);
         if(farm::chickenFood < n)
             flag=1;
         else
             farm::chickenFood -= n;
-        chickenMutex.unlock();
 
         if(flag)
             std::terminate();
@@ -69,26 +71,22 @@ namespace farm{
     void Worker::produceFood(){
         // decidem pentru care animal
         int n = rand();
-        
+        sleep(5);
         if(n % 2 == 0) {
             n = rand();
             n = n % 10; // limita 10
-            cowMutex.lock();
+            lock_guard<mutex> lck(cowMutex);
             farm::cowFood += 10;
-            cowMutex.unlock();
         }
         else {
             n = rand();
             n = n % 10;
             work += n;
-
-            chickenMutex.lock();
+            lock_guard<mutex> lck(chickenMutex);
             farm::chickenFood += 10;
-            chickenMutex.unlock();
-
-            if(n>100)
-                std::terminate();
         }
+        if (n > 100)
+            std::terminate();
     }
 
 }
