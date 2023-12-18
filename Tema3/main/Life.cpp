@@ -13,28 +13,34 @@ using namespace farm;
 void thread_chicken(std::weak_ptr<Chicken> c) {
     while(1) {
         auto temp = c.lock();
-        if(c.expired())
+        if (c.expired()) {
+            cout << "Chicken thread terminated" << endl;
             break;
+        }
         temp->Eat();
-        sleep(2);
+        
     }
 }
 void thread_cow(std::weak_ptr<Cow> c) {
     while(1) {
         auto temp = c.lock();
-        if(c.expired())
+        if (c.expired()) {
+            cout << "Cow thread terminated" << endl;
             break;
+        }
         temp->Eat();
-        sleep(3);
+       
     }
 }
 void thread_worker(std::weak_ptr<Worker> w) {
     while(1) {
         auto temp = w.lock();
-        if(w.expired())
+        if (w.expired()) {
+            cout << "Worker thread terminated" << endl;
             break;
+        }
         temp->produceFood();
-        sleep(5);
+     
     }
 }
 
@@ -42,7 +48,7 @@ void thread_worker(std::weak_ptr<Worker> w) {
 int main(){
     int nChicken = rand() % 10;
     int nCows = rand() % 10;
-    int nWorkers = rand() % 3;
+    int nWorkers = rand() % 5;
 
     vector<shared_ptr<Chicken>> chicken;
     vector<shared_ptr<Cow>> cow;
